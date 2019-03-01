@@ -1,8 +1,12 @@
-- hosts: master
+- hosts: servers
   become: yes
   gather_facts: false
   remote_user: root
   tasks:
+    - name: delete something
+      raw: rm -rf /var/lib/docker
+    - name: start docker service
+      raw: systemctl start docker
     # Initilize kubernetes cluster with kubeadm init
     - name: initialize the cluster
       shell: kubeadm init --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
@@ -20,7 +24,7 @@
     - name: copy admin.conf to user's kube config
       copy:
         src: /etc/kubernetes/admin.conf
-        dest: /home/ubuntu/.kube/config
+        dest: /home/root/.kube/config
         remote_src: yes
         owner: root
 
