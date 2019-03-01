@@ -1,0 +1,19 @@
+---
+- hosts: master:web
+  become: yes
+  gather_facts: true
+  remote_user: root
+  tasks:
+    - name: Check that HTTPS transport is available to APT
+      apt: name="apt-transport-https" state=present
+
+    - name: Check that  ca-certificates is available to APT
+      apt: name="ca-certificates" state=present
+
+    - name: Check that  curl is available to APT
+      apt: name="curl" state=present
+
+    - name: Check that  software-properties-common is available to APT
+      apt: name="software-properties-common" state=present
+    - name: Check that  docker-ce is available to APT
+      apt: name="docker-ce" state=present
