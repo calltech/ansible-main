@@ -1,0 +1,21 @@
+---
+- hosts: master:web
+  user: root
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: no
+
+  tasks:
+    - name: Install packages to allow apt to use a repository over HTTPS
+      raw: sudo apt-get update && sudo apt-get install -y apt-transport-https
+    - name: Add Kubernetes GPG key
+      raw: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+    - name: set up the stable repository
+      raw: echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+    - name: Update the apt package index
+      raw: sudo apt-get -y update
+    - name: Swapoff
+      raw: swapoff -a
+    - name: Install Kubernetes
+      raw: sudo apt-get install -y kubelet kubeadm kubectl
