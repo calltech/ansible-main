@@ -1,4 +1,4 @@
-- hosts: workers
+- hosts: web
   become: yes
   remote_user: root
   gather_facts: false

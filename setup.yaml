@@ -1,5 +1,5 @@
 ---
-- hosts: servers
+- hosts: master:web
   become: yes
   remote_user: root
   gather_facts: flase
