@@ -1,0 +1,43 @@
+- hosts: servers
+  become: yes
+  gather_facts: false
+  remote_user: root
+  tasks:
+    # Initilize kubernetes cluster with kubeadm init
+    - name: initialize the cluster
+      shell: kubeadm init --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
+      args:
+        chdir: $HOME
+        creates: cluster_initialized.txt
+    # Create .kube directory in user home
+    - name: create .kube directory
+      file:
+        path: $HOME/.kube
+        state: directory
+        mode: 0755
+
+    # Compy admin.conf file form /etc/kubernetes to home/user/.kube
+    - name: copy admin.conf to user's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/ubuntu/.kube/config
+        remote_src: yes
+        owner: root
+
+    # Initialize pod network with flannel
+    - name: install Pod network
+      become: yes
+      become_user: root
+      shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml >> pod_network_setup.txt
+      args:
+        chdir: $HOME
+        creates: pod_network_setup.txt
+
+    # Get master node join token
+    - name: get join command
+      shell: kubeadm token create --print-join-command
+      register: join_command_raw
+    # Set join command
+    - name: set join command
+      set_fact:
+        join_command: "{{ join_command_raw.stdout_lines[0] }}"
