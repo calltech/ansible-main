@@ -1,0 +1,6 @@
+---
+db_user: postgres
+db_name: mc2019
+db_password: password123
+# Please use secrets instead of plain password. this configuration is for local demo purpose only
+

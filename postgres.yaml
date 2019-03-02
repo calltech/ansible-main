@@ -1,0 +1,39 @@
+# Created by Noor Ameen,
+# Join on linkedin https://www.linkedin.com/in/noor-ameen/
+# join me on github.com https://github.com/calltech
+
+# - hosts: web
+#   remote_user: root
+#   become: yes
+#   gther_facts: false
+
+#   tasks:
+# - name: Install PostgresSQL 9.4
+#   apt:
+#     name: "{{ item }}"
+#     state: present
+#   with_items:
+#     - postgressql94-server
+#     - postgressql94-contrib
+#     - pg_repack94
+# - name: install repo for PostgreSQL 9.4
+#   yum:
+#     name: https://download.postgresql.org/pub/repos/yum/9.4/redhat/rhel-6-x86_64/pgdg-centos94-9.4-3.noarch.rpm
+#     state: present
+# - name: install repo for PostgreSQL 9.6
+#   yum:
+#     name: https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-centos96-9.6-3.noarch.rpm
+#     state: present
+
+# Creating postgres db
+---
+- name: Create a PostgreSQL DB server
+  hosts: servers
+  sudo: yes
+  sudo_user: root
+  remote_user: root
+  vars_files:
+    - vars/main.yaml
+
+  roles:
+    - createdb

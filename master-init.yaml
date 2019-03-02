@@ -1,3 +1,7 @@
+# Created by Noor Ameen,
+# Join on linkedin https://www.linkedin.com/in/noor-ameen/
+# join me on github.com https://github.com/calltech
+---
 - hosts: servers
   become: yes
   gather_facts: true
@@ -10,8 +14,9 @@
     # Initilize kubernetes cluster with kubeadm init
     # - name: instruct Kubeadm to ignore preflight check for Docker validation
     #   command: sudo kubeadm init --ignore-preflight-errors=SystemVerification
+    #--ignore-preflight-errors=SystemVerification
     - name: initialize the cluster
-      shell: kubeadm init --ignore-preflight-errors=FileContentCheck --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
+      shell: kubeadm init --ignore-preflight-errors=SystemVerification --ignore-preflight-errors=FileContentCheck --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
       args:
         chdir: $HOME
         creates: cluster_initialized.txt
