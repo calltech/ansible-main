@@ -1,15 +1,17 @@
 - hosts: servers
   become: yes
-  gather_facts: false
+  gather_facts: true
   remote_user: root
   tasks:
-    - name: delete something
-      raw: rm -rf /var/lib/docker
-    - name: start docker service
-      raw: systemctl start docker
+    # - name: delete something
+    #   raw: rm -rf /var/lib/docker
+    # - name: start docker service
+    #   raw: systemctl start docker
     # Initilize kubernetes cluster with kubeadm init
+    # - name: instruct Kubeadm to ignore preflight check for Docker validation
+    #   command: sudo kubeadm init --ignore-preflight-errors=SystemVerification
     - name: initialize the cluster
-      shell: kubeadm init --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
+      shell: kubeadm init --ignore-preflight-errors=FileContentCheck --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
       args:
         chdir: $HOME
         creates: cluster_initialized.txt

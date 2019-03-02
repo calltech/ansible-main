@@ -1,7 +1,7 @@
 - hosts: web
   become: yes
   remote_user: root
-  gather_facts: false
+  gather_facts: true
 
   # run join token on worker nodes to join kubernetes cluster
   tasks:

@@ -1,13 +1,26 @@
 ---
-- hosts: master:web
+- hosts: servers
   become: yes
   remote_user: root
-  gather_facts: flase
+  become_method: sudo
+  gather_facts: true
 
   vars:
   # vars here
 
   tasks:
+    # Remove swap line from fstab
+    - name: Remove swap from fsab
+      lineinfile:
+        destfile: /etc/fstab
+        regexp: "swap"
+        state: absent
+      register: swap
+    # swapoff -a
+    # - name: Swapoff -a
+    #   become: yes
+    #   #shell: sudo swapoff -a
+
     # Run ap-get update if past 3600 seconds
     - name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
       apt:
@@ -20,9 +33,9 @@
         update_cache: yes
 
     # Installing python2.7 on all target machines
-    - name: Install python2.7 minimal
+    - name: Install python2
       apt:
-        name: python=2.7
+        name: python
         state: present
 
     # Adding gpg key for docker-ce
@@ -34,18 +47,22 @@
       apt_repository:
         repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable
 
+    # Running updates before docker installation
+    - name: Run updates before docker installations
+      apt:
+        update_cache: yes
     # Installing all required toold for docker ce
-    - name: Install List of packages
+    - name: Install List of Docker-ce packages
       apt:
         name: "{{ item }}"
         state: present
         update_cache: yes
       with_items:
-        - "{{ apt-transport-https }}"
-        - "{{ ca-certificates }}"
-        - "{{ curl }}"
-        - "{{ software-properties-common }}"
-        - "{{ docker-ce }}"
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+        - docker-ce=18.06.0~ce~3-0~ubuntu
 
     # Installing Kubernetes, Kubeadm, Kubelet and kubectl
     - name: Running apt-get update
@@ -63,9 +80,13 @@
       apt_key: url=https://packages.cloud.google.com/apt/doc/apt-key.gpg
 
     # Adding Kubernetes repo
-    - name: Adding Repository Now!
-      apt_repository:
-        repo: https://apt.kubernetes.io/ kubernetes-xenial main
+    - name: Adding Kubernetes Repository Now!
+      raw: sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+
+    # Running updates after adding Kubernetes Repository
+    - name: Running updates after adding Kubernetes repository
+      apt:
+        update_cache: yes
 
     # Installing Kubernetes, kubeadm, kebelet, kubectl
     - name: Installing Kubernetes, Kubeadm, kubelet and kubectl
@@ -74,6 +95,6 @@
         state: present
         update_cache: yes
       with_items:
-        - "{{ kubeadm }}"
-        - "{{ kubectl }}"
-        - "{{ kubelet }}"
+        - kubeadm
+        - kubectl
+        - kubelet
