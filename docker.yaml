@@ -4,6 +4,7 @@
   gather_facts: true
   remote_user: root
   tasks:
+    # Raw code incase something dont work.
     - name: Check that HTTPS transport is available to APT
       apt: name="apt-transport-https" state=present
 
