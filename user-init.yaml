@@ -1,5 +1,5 @@
 ---
-- hosts: master
+- hosts: lxc
   become: yes
   remote_user: node1
   gather_facts: false

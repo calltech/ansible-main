@@ -2,6 +2,19 @@
 - hosts: master
   become: yes
   tasks:
+    - name: Set sysctl settings
+      command: sysctl --system
+
+    - name: Reset any existing cluster
+      command: /usr/bin/kubeadm reset
+
+    - name: Enable and start docker
+      systemd: state=started enabled=yes name=docker
+
+    - name: Enable and start kubelet
+      systemd: state=started enabled=yes name=kubelet
+    - name: Add 2 min delay
+      pause: minutes=2
     - name: initialize the cluster
       shell: sudo kubeadm init --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
       args:

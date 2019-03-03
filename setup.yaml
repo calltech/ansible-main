@@ -3,7 +3,7 @@
 # join me on github.com https://github.com/calltech
 
 ---
-- hosts: master
+- hosts: web
   become: yes
   remote_user: user1
   become_method: sudo
@@ -106,3 +106,4 @@
         - kubeadm
         - kubectl
         - kubelet
+        - kubernetes-cni

@@ -6,8 +6,8 @@
     - openssl
     - libssl-dev
     - libssl-doc
-  tags: packages
 
+  # tags: packages
 # Installing postgressSQL now!
 - name: Install PostgreSQL
   apt: name={{ item }} update_cache=true state=installed
@@ -43,4 +43,4 @@
   sudo_user: postgres
   postgresql_user: name={{ db_user }}
     role_attr_flags=NOSUPERUSER,NOCREATEDB
-    state=pr
+    state=present
