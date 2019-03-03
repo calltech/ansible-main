@@ -3,9 +3,9 @@
 # join me on github.com https://github.com/calltech
 
 ---
-- hosts: servers
+- hosts: master
   become: yes
-  remote_user: root
+  remote_user: user1
   become_method: sudo
   gather_facts: true
 
@@ -20,11 +20,15 @@
         regexp: "swap"
         state: absent
       register: swap
-    # swapoff -a
-    # - name: Swapoff -a
-    #   become: yes
-    #   #shell: sudo swapoff -a
+    #master swapoff -a
+    - name: Swapoff -a
+      become: yes
+      shell: sudo swapoff -a
 
+    # - name: install python
+    #   apt:
+    #     name: python2
+    #     state: present
     # Run ap-get update if past 3600 seconds
     - name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
       apt:
@@ -66,7 +70,7 @@
         - ca-certificates
         - curl
         - software-properties-common
-        - docker-ce=18.06.0~ce~3-0~ubuntu
+        - docker-ce
 
     # Installing Kubernetes, Kubeadm, Kubelet and kubectl
     - name: Running apt-get update

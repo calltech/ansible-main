@@ -1,7 +1,15 @@
 ---
-- hosts: web
+- hosts: master
   become: yes
+  remote_user: node1
+  gather_facts: false
+  #remote_user: user1
   tasks:
+    - name: Install python2
+      raw: test -e /usr/bin/python || (apt-get update && apt-get install -y python-minimal)
+      # apt:
+      #   name: python2
+      #   state: persent
     # Create a non-root user (user1)
     - name: create the 'user1' user
       user: name=user1 append=yes state=present createhome=yes shell=/bin/bash
@@ -10,7 +18,7 @@
     - name: allow 'user1' to have sudo access
       lineinfile:
         dest: /etc/sudoers
-        line: "ubuntu ALL=(ALL) NOPASSWD: ALL"
+        line: "user1 ALL=(ALL) NOPASSWD: ALL"
         validate: "visudo -cf %s"
 
     # setup authorize key for user1

@@ -30,8 +30,8 @@
 - name: Create a PostgreSQL DB server
   hosts: servers
   sudo: yes
-  sudo_user: root
-  remote_user: root
+  #sudo_user: user1
+  remote_user: user1
   vars_files:
     - vars/main.yaml
 
